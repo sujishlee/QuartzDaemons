@@ -28,13 +28,6 @@
                 </button>
                 <a asp-area="" asp-controller="Home" asp-action="Index" class="navbar-brand">EMCDaemon</a>
             </div>
-            <div class="navbar-collapse collapse">
-                <ul class="nav navbar-nav">
-                    <li><a asp-area="" asp-controller="Home" asp-action="Index">Home</a></li>
-                    <li><a asp-area="" asp-controller="Home" asp-action="About">About</a></li>
-                    <li><a asp-area="" asp-controller="Home" asp-action="Contact">Contact</a></li>
-                </ul>
-            </div>
         </div>
     </nav>
 
@@ -42,10 +35,10 @@
 
     <div class="container body-content">
         @RenderBody()
-        <hr />
-        <footer>
+        @*<hr />*@
+        @*<footer>
             <p>&copy; 2020 - EMCDaemon</p>
-        </footer>
+        </footer>*@
     </div>
 
     <environment include="Development">

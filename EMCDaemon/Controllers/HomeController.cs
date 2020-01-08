@@ -12,36 +12,35 @@ namespace EMCDaemon.Controllers
 {
     public class HomeController : Controller
     {
+        IScheduler _scheduler;
+        public HomeController(IScheduler scheduler)
+        {
+            _scheduler = scheduler;
+        }
         public IActionResult Index()
         {
             return View();
         }
 
-        public IActionResult StartEMCReportDataProcessor()
+        public async Task<IActionResult> StartEMCReportDataProcessor()
         {
-            IJobDetail job = JobBuilder.Create<EMCReportDataProcessor>()
-                            .WithIdentity("EMCReportDataProcessor", "ReportDataProcessor")
+            IJobDetail job = JobBuilder.Create<EMCReportDataProcessorJob>()
+                            .WithIdentity("EMCReportDataProcessorJob", "ReportDataProcessor")
+                            .StoreDurably()
                             .Build();
+
+            await _scheduler.AddJob(job, true);
+
+            ITrigger trigger = TriggerBuilder.Create()
+                                            .ForJob(job)
+                                            .WithIdentity("EMCReportDataProcessorDaily", "EMCReportDataProcessorJob")
+                                            .StartNow()
+                                            .WithSimpleSchedule(x => x.WithIntervalInSeconds(5).RepeatForever())
+                                            .Build();
+
+            await _scheduler.ScheduleJob(trigger);
+
             return RedirectToAction("Index");
-        }
-
-        public IActionResult About()
-        {
-            ViewData["Message"] = "Your application description page.";
-
-            return View();
-        }
-
-        public IActionResult Contact()
-        {
-            ViewData["Message"] = "Your contact page.";
-
-            return View();
-        }
-
-        public IActionResult Privacy()
-        {
-            return View();
         }
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
